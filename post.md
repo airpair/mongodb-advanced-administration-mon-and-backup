@@ -18,7 +18,7 @@ In production all MongoDB instances should be part of replica sets.  A replica s
 
 #### Sharded Clusters - Automated Horizontal Scaling
 
-In a sharded cluster several replica sets are assembled into a cluster which is connected to through `mongos` (s for server, it is really just a routing proxy) instances.  The `mongos` router will, depending on your query, figure out which one of the servers has the data you are interested in - route your query to those servers - then merge the results and return them to you.  The wire protocol and the driver calls to a `mongos` are identical to that of calls that are going to individual nodes or replica sets, so your application does not need to know if it is talking to a cluster or not.
+In a sharded cluster several replica sets are assembled into a cluster which is connected to through `mongos` (s for server, it is really just a routing proxy) instances.  The `mongos` router will, depending on your query, figure out which one of the servers has the data you are interested in - route your query to those servers - then merge the results and return them to you.  The wire protocol and the driver calls to a `mongos` are identical to that of calls that are going to individual nodes or replica sets, so your application does not need to know if it is talking to a cluster or not (however all access to a cluster should go through a `mongos` instance to prevent data corruption).
 
 #### Shard keys - Application Specific Distribution
 
@@ -55,7 +55,7 @@ However there are also downsides:
 1. **Cost.**  This system could end up costing a lot of money, especially as you must make sure the MongoDB instances are provisioned so they can keep up with the instances in your datacenter.
 2. **Security.**  You must maintain a secure connection to the cloud provider as replication in MongoDB occurs without encryption.
 3. **Bandwidth.**  You must have enough bandwidth to be able to keep this data set in sync or it will quickly become useless, requiring manual intervention.
-4. **Time.**  It will in all likelihood take a lot of time to maintain, especially if members in the cloud fall out of sync and a manual re-sync operation is required.
+4. **Time.**  It will in all likelihood take a lot of time to maintain, especially if members in the cloud fall out of sync and a manual re-sync operation is required.  Additionally maintaining a separate cloud infrastructure and the connection to it requires time from the team.
 
 It can look like the costs outweigh the benefits by sheer numbers, but let's be fair those two benefits are really big benefits.  What got me to give up a hybrid cloud was when we used this technique with a sharded cluster.
 
@@ -117,7 +117,7 @@ MongoDB is heralded as having no schema, but if you talk to anyone who has worke
 
 ### Consider other datastores
 
-Mongo is very powerful and flexible, what it is good at it is quite good at.  However it is not ideal for all datasets.  Keep an open mind when other datasets are better suited for your access patterns, it is dangerous to become so dependent on a single technology that you cannot innovate.  I'll list some brief patterns of access that could be examples of different datastores to use (but it is by far comprehensive in the access patterns or in the technologies listed).
+Mongo is very powerful and flexible, what it is good at it is quite good at.  However it is not ideal for all datasets.  Keep an open mind when other datasets are better suited for your access patterns, it is dangerous to become so dependent on a single technology that you cannot innovate.  I'll list some brief patterns of access that could be examples of different datastores to use (but it is by far from comprehensive in the access patterns or in the technologies listed).
 
 1. **Link Shortening**.  If you are constructing some link shortening for your own domain then you might be creating some string that maps to a URL, effectively creating a hash map of these shortened links to the actual URL.  This can be stored in MongoDB as a document whose _id field is the shortened key and a single field of the URL, creating a key-value pair as a document.  You can get rapid insertion rates and speedy lookups from Mongo but there are other technologies, such as Redis or Aerospike, that may give you even greater performance and flexibility as key-value stores.
 2. **Customer Accounts**.  The traditional problem of maintaining a balance or an account for a customer is fraught with potential race conditions.  You want to put a credit or deduction on their account balance and make sure the event is recorded as well.  You cannot change the account balance without making sure the event is recorded or the other way around.  Instead of implementing a system of locks using your application a database that supports transactions will save you (If you are trying to implement ACID in your application, stop!  Someone else has already spent a long time working on this, just stand on the shoulders of giants!).  Traditional relational databases such as Postgres, or MySQL would serve you better.
