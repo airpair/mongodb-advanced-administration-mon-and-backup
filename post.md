@@ -2,13 +2,14 @@
 
 This blog post was based on (but is not identical to) my talk given at the MongoDB World 2015 conference.  If you would like to see the talk then luckily for you it was recorded and it can be found on Mongo's website.
 
+### What is MongoDB?
+
+MongoDB is the leading NoSQL database, NoSQL being a catch-all for any database that is not a relational SQL based database.  I might argue that it is more useful to call MongoDB a document store, because it stores JSON documents, and not so much as a database which invokes thoughts of schemas, foreign keys, transactions, and joins.  MongoDB does not enforce a schema, it does not allow you to do joins within the database, but it is very good at scaling horizontally and it is very developer friendly.  It can be used easily, deployed quickly, and get your application working very fast.  However with great power comes great responsibility, and with great flexibility comes the danger of applying MongoDB to tasks which it might not be ideally suited.  We'll talk later about what tasks might be examples of different uses for other data technologies.
+
 ### Who is this for?
 
 The land of NoSQL is changing rapidly and it is easy to get caught up in a lot of the hype, especially with MongoDB.  I think that MongoDB is a great tool - but like all tools it can be misused or applied to the wrong task.  I'm going to be talking about how you can take control of a MongoDB deployment and begin imposing order, stability, and determinism when your stack gets out of hand.  If you are looking to make sure your MongoDB implimentation will not take a team to fix, or have a deployment and don't know where to start fixing it then I hope my experiences make your task a bit easier.  I'm going to assume some working familiarity with MongoDB in this post so if you don't know what sharding is or what replica sets there are a lot of resources out there for you.  The free courses offered by [MongoDB University](https://university.mongodb.com/) are excellent both in the content covered and in the help from experts you can get during the courses.  There are also many [Mongo User Groups](https://www.mongodb.org/user-groups) around the country where you can get involved with other MongoDB users.
 
-### What is MongoDB?
-
-MongoDB is the leading NoSQL database, NoSQL being a catch-all for any database that is not a relational SQL based database.  I might argue that it is more useful to call MongoDB a document store, because it stores JSON documents, and not so much as a database which invokes thoughts of schemas, foreign keys, transactions, and joins.  MongoDB does not enforce a schema, it does not allow you to do joins within the database, but it is very good at scaling horizontally and it is very developer friendly.  It can be used easily, deployed quickly, and get your application working very fast.  However with great power comes great responsibility, and with great flexibility comes the danger of applying MongoDB to tasks which it might not be ideally suited.  We'll talk later about what tasks might be examples of different uses for other data technologies.
 
 ### Why do I still need a DBA for Mongo?
 
